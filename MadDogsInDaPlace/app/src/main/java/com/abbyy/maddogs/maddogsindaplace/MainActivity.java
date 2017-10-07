@@ -813,7 +813,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("ActionMode", "click");
                     switch(item.getItemId()) {
                         case R.id.cab_add:
-                            DataBase.getInstance(getApplicationContext()).addWord(word);
+                            if (DataBase.getInstance(getApplicationContext()).isIn(word)) {
+                                //вывести что слово уже есть
+                            } else {
+                                DataBase.getInstance(getApplicationContext()).addWord(word);
+                            }
                             mActionMode.finish();
                             return true;
                     }
