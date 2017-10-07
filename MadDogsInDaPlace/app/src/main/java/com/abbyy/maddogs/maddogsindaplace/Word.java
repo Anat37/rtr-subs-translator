@@ -8,8 +8,8 @@ import java.util.Stack;
  */
 
 public class Word {
-    static private final Integer srcLang = 1033;
-    static private final Integer dstLang = 1049;
+    private Integer srcLang = 1033;
+    private Integer dstLang = 1049;
 
     private String srcWord;
     private String dstWord;
@@ -32,6 +32,13 @@ public class Word {
                 }
             }
         });
+    }
+
+    public Word(String _srcWord, String _destWord, Integer _srcLang, Integer _destLang) {
+        srcWord = _srcWord;
+        dstWord = _destWord;
+        srcLang = _srcLang;
+        dstLang = _destLang;
     }
 
     public String getSrcWord() {
