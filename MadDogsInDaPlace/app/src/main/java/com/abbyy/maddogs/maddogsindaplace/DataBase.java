@@ -22,11 +22,13 @@ public class DataBase {
         dbHelper = new DBHelper(context);
     }
 
-    public void addWord(String word, String translation) {
+    public void addWord(Word word) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("word", word);
-        contentValues.put("translation", translation);
+        contentValues.put("word", word.getSrcWord());
+        contentValues.put("translation", word.getDstWord());
+        contentValues.put("from", word.getSrcLang());
+        contentValues.put("to", word.getDstLang());
         db.insert("wordTable", null, contentValues);
     }
 
@@ -49,6 +51,11 @@ public class DataBase {
         dbHelper.close();
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        dbHelper.close();
+    }
+
     class DBHelper extends SQLiteOpenHelper {
 
         public DBHelper(Context context) {
@@ -63,7 +70,7 @@ public class DataBase {
             db.execSQL("create table wordTable ("
                     + "id integer primary key autoincrement,"
                     + "word text,"
-                    + "translation text" + ");");
+                    + "translation text" + "from" + "to" + ");");
         }
 
         @Override
