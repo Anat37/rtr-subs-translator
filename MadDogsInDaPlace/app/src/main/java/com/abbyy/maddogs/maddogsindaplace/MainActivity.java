@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int cameraZoom = 1;
     // The default behavior in this sample is to start recognition when application is started or
     // resumed. You can turn off this behavior or remove it completely to simplify the application
-    private static final boolean startRecognitionOnAppStart = true;
+    private static final boolean startRecognitionOnAppStart = false;
     // Area of interest specified through margin sizes relative to camera preview size
     private static final int areaOfInterestMargin_PercentOfWidth = 4;
     private static final int areaOfInterestMargin_PercentOfHeight = 25;
@@ -770,13 +770,29 @@ public class MainActivity extends AppCompatActivity {
             Menu menu = mode.getMenu();
             // Remove the default menu items (select all, copy, paste, search)
             menu.clear();
-
             // If you want to keep any of the defaults,
             // remove the items you don't want individually:
             // menu.removeItem(android.R.id.[id_of_item_to_remove])
 
             // Inflate your own menu items
             mode.getMenuInflater().inflate(R.menu.action_mode_layout, menu);
+            MenuItem.OnMenuItemClickListener listener = new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Log.d("ActionMode", "click");
+                    int start = detectedTextView.getSelectionStart();
+                    int end =detectedTextView.getSelectionEnd();
+                    switch(item.getItemId()) {
+                        case R.id.cab_add:
+                            Toast.makeText(MainActivity.this, detectedTextView.getText(), Toast.LENGTH_LONG);
+                            mActionMode.finish();
+                            return true;
+                    }
+                    return false;
+                }
+            };
+            menu.getItem(0).setOnMenuItemClickListener(listener);
+            menu.getItem(1).setOnMenuItemClickListener(listener);
         }
 
         super.onActionModeStarted(mode);
