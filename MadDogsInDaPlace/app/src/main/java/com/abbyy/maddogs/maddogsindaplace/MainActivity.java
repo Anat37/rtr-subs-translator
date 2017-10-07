@@ -1,34 +1,35 @@
 package com.abbyy.maddogs.maddogsindaplace;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.ImageFormat;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.text.style.CharacterStyle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Surface;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.abbyy.mobile.rtr.Engine;
 import com.abbyy.mobile.rtr.ITextCaptureService;
@@ -36,6 +37,8 @@ import com.abbyy.mobile.rtr.Language;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.security.auth.callback.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int cameraZoom = 1;
     // The default behavior in this sample is to start recognition when application is started or
     // resumed. You can turn off this behavior or remove it completely to simplify the application
-    private static final boolean startRecognitionOnAppStart = true;
+    private static final boolean startRecognitionOnAppStart = false;
     // Area of interest specified through margin sizes relative to camera preview size
     private static final int areaOfInterestMargin_PercentOfWidth = 4;
     private static final int areaOfInterestMargin_PercentOfHeight = 25;
@@ -71,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
             Language.Spanish,
     };
     ///////////////////////////////////////////////////////////////////////////////
+
+    private Language mDestinationLanguage;
 
     // The 'Abbyy RTR SDK Engine' and 'Text Capture Service' to be used in this sample application
     private Engine engine;
@@ -95,6 +100,9 @@ public class MainActivity extends AppCompatActivity {
     private Button startButton; // The start button
     private TextView warningTextView; // Show warnings from recognizer
     private TextView errorTextView; // Show errors from recognizer
+    private EditText detectedTextView;
+    private Button finishButton;
+    private ActionMode mActionMode;
 
     // Text displayed on start button
     private static final String BUTTON_TEXT_START = "Start";
@@ -125,6 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 if( resultStatus.ordinal() >= 3 ) {
                     // The result is stable enough to show something to the user
                     surfaceViewWithOverlay.setLines( lines, resultStatus );
+                    String text = "";
+                    for (ITextCaptureService.TextLine line: lines) {
+                        text += line.Text + ' ';
+                    }
+                    detectedTextView.setText(text);
                 } else {
                     // The result is not stable. Show nothing
                     surfaceViewWithOverlay.setLines( null, ITextCaptureService.ResultStabilityStatus.NotReady );
@@ -133,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 // Show the warning from the service if any. The warnings are intended for the user
                 // to take some action (zooming in, checking recognition language, etc.)
                 warningTextView.setText( warning != null ? warning.name() : "" );
-
+                /*
                 if( resultStatus == ITextCaptureService.ResultStabilityStatus.Stable ) {
                     // Stable result has been reached. Stop the service
                     stopRecognition();
@@ -143,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     // the same sound that is used for pressing buttons
                     surfaceViewWithOverlay.setFillBackground( true );
                     startButton.playSoundEffect( android.view.SoundEffectConstants.CLICK );
-                }
+                }*/
             }
         }
 
@@ -600,8 +613,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Initialize recognition language spinner in the UI with available languages
-    private void initializeRecognitionLanguageSpinner()
-    {
+    private void initializeRecognitionLanguageSpinner() {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
         final Spinner languageSpinner = (Spinner) findViewById( R.id.recognitionLanguageSpinner );
 
@@ -671,8 +683,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // The 'Start' and 'Stop' button
-    public void onStartButtonClick( View view )
-    {
+    public void onStartButtonClick( View view ) {
         if( startButton.getText().equals( BUTTON_TEXT_STOP ) ) {
             stopRecognition();
         } else {
@@ -687,19 +698,39 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onFinishButtonClick( View view ) {
+    }
+
+
+
     @Override
-    public void onCreate( Bundle savedInstanceState )
-    {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_main );
+    public void onCreate( Bundle savedInstanceState ) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         // Retrieve some ui components
-        warningTextView = (TextView) findViewById( R.id.warningText );
-        errorTextView = (TextView) findViewById( R.id.errorText );
-        startButton = (Button) findViewById( R.id.startButton );
+        warningTextView = (TextView) findViewById(R.id.warningText);
+        errorTextView = (TextView) findViewById(R.id.errorText);
+        startButton = (Button) findViewById(R.id.startButton);
+        detectedTextView = (EditText) findViewById(R.id.detectedText);
+        finishButton = (Button) findViewById(R.id.finishButton);
 
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStartButtonClick(v);
+            }
+        });
+
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFinishButtonClick(v);
+            }
+        });
         // Initialize the recognition language spinner
         initializeRecognitionLanguageSpinner();
+        initializeDestinationLanguageSpinner();
 
         // Manually create preview surface. The only reason for this is to
         // avoid making it public top level class
@@ -754,205 +785,109 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
-    // Surface View combined with an overlay showing recognition results and 'progress'
-    static class SurfaceViewWithOverlay extends SurfaceView {
-        private Point[] quads;
-        private String[] lines;
-        private Rect areaOfInterest;
-        private int stability;
-        private int scaleNominatorX = 1;
-        private int scaleDenominatorX = 1;
-        private int scaleNominatorY = 1;
-        private int scaleDenominatorY = 1;
-        private Paint textPaint;
-        private Paint lineBoundariesPaint;
-        private Paint backgroundPaint;
-        private Paint areaOfInterestPaint;
+    @Override
+    public void onActionModeStarted(ActionMode mode) {
+        if (mActionMode == null) {
+            mActionMode = mode;
+            Menu menu = mode.getMenu();
+            // Remove the default menu items (select all, copy, paste, search)
+            menu.clear();
+            // If you want to keep any of the defaults,
+            // remove the items you don't want individually:
+            // menu.removeItem(android.R.id.[id_of_item_to_remove])
 
-        public SurfaceViewWithOverlay( Context context )
-        {
-            super( context );
-            this.setWillNotDraw( false );
-
-            lineBoundariesPaint = new Paint();
-            lineBoundariesPaint.setStyle( Paint.Style.STROKE );
-            lineBoundariesPaint.setARGB( 255, 128, 128, 128 );
-            textPaint = new Paint();
-            areaOfInterestPaint = new Paint();
-            areaOfInterestPaint.setARGB( 100, 0, 0, 0 );
-            areaOfInterestPaint.setStyle( Paint.Style.FILL );
-        }
-
-        public void setScaleX( int nominator, int denominator )
-        {
-            scaleNominatorX = nominator;
-            scaleDenominatorX = denominator;
-        }
-
-        public void setScaleY( int nominator, int denominator )
-        {
-            scaleNominatorY = nominator;
-            scaleDenominatorY = denominator;
-        }
-
-        public void setFillBackground( Boolean newValue )
-        {
-            if( newValue ) {
-                backgroundPaint = new Paint();
-                backgroundPaint.setStyle( Paint.Style.FILL );
-                backgroundPaint.setARGB( 100, 255, 255, 255 );
-            } else {
-                backgroundPaint = null;
-            }
-            invalidate();
-        }
-
-        public void setAreaOfInterest( Rect newValue )
-        {
-            areaOfInterest = newValue;
-            invalidate();
-        }
-
-        public Rect getAreaOfInterest()
-        {
-            return areaOfInterest;
-        }
-
-        public void setLines( ITextCaptureService.TextLine[] lines,
-                              ITextCaptureService.ResultStabilityStatus resultStatus )
-        {
-            if( lines != null && scaleDenominatorX > 0 && scaleDenominatorY > 0 ) {
-                this.quads = new Point[lines.length * 4];
-                this.lines = new String[lines.length];
-                for( int i = 0; i < lines.length; i++ ) {
-                    ITextCaptureService.TextLine line = lines[i];
-                    for( int j = 0; j < 4; j++ ) {
-                        this.quads[4 * i + j] = new Point(
-                                ( scaleNominatorX * line.Quadrangle[j].x ) / scaleDenominatorX,
-                                ( scaleNominatorY * line.Quadrangle[j].y ) / scaleDenominatorY
-                        );
+            // Inflate your own menu items
+            mode.getMenuInflater().inflate(R.menu.action_mode_layout, menu);
+            MenuItem.OnMenuItemClickListener listener = new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    Log.d("ActionMode", "click");
+                    switch(item.getItemId()) {
+                        case R.id.cab_add:
+                            Toast.makeText(MainActivity.this, detectedTextView.getText(), Toast.LENGTH_LONG);
+                            mActionMode.finish();
+                            return true;
                     }
-                    this.lines[i] = line.Text;
+                    return false;
                 }
-                switch( resultStatus ) {
-                    case NotReady:
-                        textPaint.setARGB( 255, 128, 0, 0 );
-                        break;
-                    case Tentative:
-                        textPaint.setARGB( 255, 128, 0, 0 );
-                        break;
-                    case Verified:
-                        textPaint.setARGB( 255, 128, 64, 0 );
-                        break;
-                    case Available:
-                        textPaint.setARGB( 255, 128, 128, 0 );
-                        break;
-                    case TentativelyStable:
-                        textPaint.setARGB( 255, 64, 128, 0 );
-                        break;
-                    case Stable:
-                        textPaint.setARGB( 255, 0, 128, 0 );
-                        break;
-                }
-                stability = resultStatus.ordinal();
-
-            } else {
-                stability = 0;
-                this.lines = null;
-                this.quads = null;
-            }
-            this.invalidate();
+            };
+            menu.getItem(0).setOnMenuItemClickListener(listener);
         }
+        int start = detectedTextView.getSelectionStart();
+        int end =detectedTextView.getSelectionEnd();
+        mode.setTitle(detectedTextView.getText().subSequence(start, end));
+        super.onActionModeStarted(mode);
+    }
 
-        @Override
-        protected void onDraw( Canvas canvas )
-        {
-            super.onDraw( canvas );
-            int width = canvas.getWidth();
-            int height = canvas.getHeight();
-            canvas.save();
-            // If there is any result
-            if( lines != null ) {
-                // Shade (whiten) the background when stable
-                if( backgroundPaint != null ) {
-                    canvas.drawRect( 0, 0, width, height, backgroundPaint );
-                }
+    @Override
+    public void onActionModeFinished(ActionMode mode) {
+        mActionMode = null;
+        super.onActionModeFinished(mode);
+    }
+
+    // Initialize recognition language spinner in the UI with available languages
+    private void initializeDestinationLanguageSpinner() {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+        final Spinner languageSpinner = (Spinner) findViewById( R.id.destinationLanguageSpinner );
+
+        // Make the collapsed spinner the size of the selected item
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>( MainActivity.this, R.layout.spinner_item ) {
+            @Override
+            public View getView( int position, View convertView, ViewGroup parent )
+            {
+
+                View view = super.getView( position, convertView, parent );
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT );
+                view.setLayoutParams( params );
+                return view;
             }
-            if( areaOfInterest != null ) {
-                // Shading and clipping the area of interest
-                int left = ( areaOfInterest.left * scaleNominatorX ) / scaleDenominatorX;
-                int right = ( areaOfInterest.right * scaleNominatorX ) / scaleDenominatorX;
-                int top = ( areaOfInterest.top * scaleNominatorY ) / scaleDenominatorY;
-                int bottom = ( areaOfInterest.bottom * scaleNominatorY ) / scaleDenominatorY;
-                canvas.drawRect( 0, 0, width, top, areaOfInterestPaint );
-                canvas.drawRect( 0, bottom, width, height, areaOfInterestPaint );
-                canvas.drawRect( 0, top, left, bottom, areaOfInterestPaint );
-                canvas.drawRect( right, top, width, bottom, areaOfInterestPaint );
-                canvas.drawRect( left, top, right, bottom, lineBoundariesPaint );
-                canvas.clipRect( left, top, right, bottom );
-            }
-            // If there is any result
-            if( lines != null ) {
-                // Draw the text lines
-                for( int i = 0; i < lines.length; i++ ) {
-                    // The boundaries
-                    int j = 4 * i;
-                    Path path = new Path();
-                    Point p = quads[j + 0];
-                    path.moveTo( p.x, p.y );
-                    p = quads[j + 1];
-                    path.lineTo( p.x, p.y );
-                    p = quads[j + 2];
-                    path.lineTo( p.x, p.y );
-                    p = quads[j + 3];
-                    path.lineTo( p.x, p.y );
-                    path.close();
-                    canvas.drawPath( path, lineBoundariesPaint );
+        };
 
-                    // The skewed text (drawn by coordinate transform)
-                    canvas.save();
-                    Point p0 = quads[j + 0];
-                    Point p1 = quads[j + 1];
-                    Point p3 = quads[j + 3];
+        // Stored preference
+        final String destinationLanguageKey = "DestinationLanguage";
+        String selectedLanguage = preferences.getString( destinationLanguageKey, "Russian" );
+        mDestinationLanguage = Language.valueOf(selectedLanguage);
 
-                    int dx1 = p1.x - p0.x;
-                    int dy1 = p1.y - p0.y;
-                    int dx2 = p3.x - p0.x;
-                    int dy2 = p3.y - p0.y;
-
-                    int sqrLength1 = dx1 * dx1 + dy1 * dy1;
-                    int sqrLength2 = dx2 * dx2 + dy2 * dy2;
-
-                    double angle = 180 * Math.atan2( dy2, dx2 ) / Math.PI;
-                    double xskew = ( dx1 * dx2 + dy1 * dy2 ) / Math.sqrt( sqrLength2 );
-                    double yskew = Math.sqrt( sqrLength1 - xskew * xskew );
-
-                    textPaint.setTextSize( (float) yskew );
-                    String line = lines[i];
-                    Rect textBounds = new Rect();
-                    textPaint.getTextBounds( lines[i], 0, line.length(), textBounds );
-                    double xscale = Math.sqrt( sqrLength2 ) / textBounds.width();
-
-                    canvas.translate( p0.x, p0.y );
-                    canvas.rotate( (float) angle );
-                    canvas.skew( -(float) ( xskew / yskew ), 0.0f );
-                    canvas.scale( (float) xscale, 1.0f );
-
-                    canvas.drawText( lines[i], 0, 0, textPaint );
-                    canvas.restore();
-                }
-            }
-            canvas.restore();
-
-            // Draw the 'progress'
-            if( stability > 0 ) {
-                int r = width / 50;
-                int y = height - 175 - 2 * r;
-                for( int i = 0; i < stability; i++ ) {
-                    int x = width / 2 + 3 * r * ( i - 2 );
-                    canvas.drawCircle( x, y, r, textPaint );
-                }
+        // Fill the spinner with available languages selecting the previously chosen language
+        int selectedIndex = -1;
+        for( int i = 0; i < languages.length; i++ ) {
+            String name = languages[i].name();
+            adapter.add( name );
+            if( name.equalsIgnoreCase( selectedLanguage ) ) {
+                selectedIndex = i;
             }
         }
+        if( selectedIndex == -1 ) {
+            adapter.insert( selectedLanguage, 0 );
+            selectedIndex = 0;
+        }
+
+        languageSpinner.setAdapter( adapter );
+
+        if( selectedIndex != -1 ) {
+            languageSpinner.setSelection( selectedIndex );
+        }
+
+        // The callback to be called when a language is selected
+        languageSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected( AdapterView<?> parent, View view, int position, long id )
+            {
+                mDestinationLanguage = Language.valueOf((String) parent.getItemAtPosition( position ));
+                if( !preferences.getString( destinationLanguageKey, "" ).equalsIgnoreCase( mDestinationLanguage.toString() ) ) {
+                    // Store the selection in preferences
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString( destinationLanguageKey, mDestinationLanguage.toString() );
+                    editor.commit();
+                }
+            }
+
+            @Override
+            public void onNothingSelected( AdapterView<?> parent )
+            {
+            }
+        } );
     }
 }
