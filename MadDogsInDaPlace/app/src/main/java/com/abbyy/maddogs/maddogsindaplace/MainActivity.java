@@ -809,7 +809,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("ActionMode", "click");
                     switch(item.getItemId()) {
                         case R.id.cab_add:
-                            dataBase.addWord("one", "один");
+                            dataBase.addWord(new Word("jhhghvh"));
                             mActionMode.finish();
                             return true;
                     }

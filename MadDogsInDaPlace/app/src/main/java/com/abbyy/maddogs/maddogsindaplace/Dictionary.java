@@ -23,10 +23,8 @@ public class Dictionary extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
-        ArrayList<Word> words = new ArrayList<Word>() {{
-            add(new Word("Hello"));
-            add(new Word("Good buy"));
-        }};
+        ArrayList<Word> words = new DataBase(getApplicationContext()).getWords();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,13 +46,8 @@ public class Dictionary extends Activity {
         listView.setOnTouchListener(gestureListener);
     }
 
-    /*private void onLeftSwipe() {
+    private void onLeftSwipe() {
         Intent intent = new Intent(Dictionary.this, MainActivity.class);
-        startActivity(intent);
-    }*/
-
-    private void onRightSwipe() {
-        Intent intent  = new Intent(Dictionary.this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -76,18 +69,21 @@ public class Dictionary extends Activity {
                 // Left swipe
                 if (diff > SWIPE_MIN_DISTANCE
                         && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    //Dictionary.this.onLeftSwipe();
-                }
-                // Right swipe
-                else if (-diff > SWIPE_MIN_DISTANCE
-                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Dictionary.this.onRightSwipe();
+                    Dictionary.this.onLeftSwipe();
                 }
             } catch (Exception e) {
                 Log.e("Home", "Error on gestures");
             }
             return false;
         }
+    }
 
+    @Override
+    protected void onResume() {
+        ArrayList<Word> words = new DataBase(getApplicationContext()).getWords();
+        WordAdapter itemsAdapter = new WordAdapter(this, words);
+        ListView listView = (ListView) findViewById(R.id.dictionary);
+        listView.setAdapter(itemsAdapter);
+        super.onResume();
     }
 }

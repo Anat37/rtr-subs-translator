@@ -27,19 +27,19 @@ public class DataBase {
         ContentValues contentValues = new ContentValues();
         contentValues.put("word", word.getSrcWord());
         contentValues.put("translation", word.getDstWord());
-        contentValues.put("from", word.getSrcLang());
-        contentValues.put("to", word.getDstLang());
+        contentValues.put("froml", word.getSrcLang());
+        contentValues.put("tol", word.getDstLang());
         db.insert("wordTable", null, contentValues);
     }
 
-    public ArrayList<String> getWords() {
+    public ArrayList<Word> getWords() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String[] select = {"word"};
         Cursor cursor = db.query("wordTable", select, null, null, null, null, null);
-        ArrayList<String> ret = new ArrayList<>();
+        ArrayList<Word> ret = new ArrayList<>();
         if (cursor.moveToFirst()) {
-            while(!cursor.isAfterLast()) {
-                ret.add(cursor.getString(cursor.getColumnIndex("name")));
+            while (!cursor.isAfterLast()) {
+                ret.add(new Word(cursor.getString(cursor.getColumnIndex("word"))));
                 cursor.moveToNext();
             }
         }
@@ -70,7 +70,7 @@ public class DataBase {
             db.execSQL("create table wordTable ("
                     + "id integer primary key autoincrement,"
                     + "word text,"
-                    + "translation text" + "from" + "to" + ");");
+                    + "translation text," + "froml integer," + "tol integer" + ");");
         }
 
         @Override
