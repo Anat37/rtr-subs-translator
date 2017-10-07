@@ -34,8 +34,8 @@ public class WordAdapter extends ArrayAdapter<Word> {
         TextView defaultTextView = (TextView) listItemView.findViewById(R.id.default_text_view);
         defaultTextView.setText(currentWord.getWord());
 
-        TextView svenskaTextView = (TextView) listItemView.findViewById(R.id.russian_text_view);
-        svenskaTextView.setText(currentWord.getInRussian());
+        TextView russianTextView = (TextView) listItemView.findViewById(R.id.russian_text_view);
+        russianTextView.setText(currentWord.getInRussian());
 
         return listItemView;
     }
