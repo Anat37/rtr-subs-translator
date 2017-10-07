@@ -109,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String BUTTON_TEXT_STOP = "Stop";
     private static final String BUTTON_TEXT_STARTING = "Starting...";
 
-    DataBase dataBase;
 
     // To communicate with the Text Capture Service we will need this callback:
     private ITextCaptureService.Callback textCaptureCallback = new ITextCaptureService.Callback() {
@@ -813,7 +812,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("ActionMode", "click");
                     switch(item.getItemId()) {
                         case R.id.cab_add:
-                            dataBase.addWord(word);
+                            DataBase.getInstance(getApplicationContext()).addWord(word);
                             mActionMode.finish();
                             return true;
                     }
