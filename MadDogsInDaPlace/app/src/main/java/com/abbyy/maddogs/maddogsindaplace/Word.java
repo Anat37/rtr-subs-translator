@@ -57,6 +57,7 @@ public class Word {
             Log.wtf("word-translate", String.valueOf(huc.getResponseCode())); // TODO
         } catch (Exception exception) {
             // TODO
+            Log.wtf("AAAAA!!!1!!!1!11!", exception); // TODO
             Log.wtf("word-translate", "Упс!"); // TODO
             inRussian = "";
         }
