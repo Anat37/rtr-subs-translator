@@ -701,6 +701,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFinishButtonClick( View view ) {
+        finish();
     }
 
 
