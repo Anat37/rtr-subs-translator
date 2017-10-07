@@ -791,7 +791,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onActionModeStarted(ActionMode mode) {
+    public void onActionModeStarted(final ActionMode mode) {
+        int start = detectedTextView.getSelectionStart();
+        int end =detectedTextView.getSelectionEnd();
+        final String rawWord = detectedTextView.getText().subSequence(start, end).toString();
+        final Word word = new Word(rawWord);
         if (mActionMode == null) {
             mActionMode = mode;
             Menu menu = mode.getMenu();
@@ -809,7 +813,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("ActionMode", "click");
                     switch(item.getItemId()) {
                         case R.id.cab_add:
-                            dataBase.addWord(new Word("jhhghvh"));
+                            dataBase.addWord(word);
                             mActionMode.finish();
                             return true;
                     }
@@ -818,9 +822,13 @@ public class MainActivity extends AppCompatActivity {
             };
             menu.getItem(0).setOnMenuItemClickListener(listener);
         }
-        int start = detectedTextView.getSelectionStart();
-        int end =detectedTextView.getSelectionEnd();
-        mode.setTitle(detectedTextView.getText().subSequence(start, end));
+        mode.setTitle("...");
+        word.tryTranslation(new Word.TranslationCallback() {
+            @Override
+            public void onTranslate(String translation) {
+                mode.setTitle(translation);
+            }
+        });
         super.onActionModeStarted(mode);
     }
 
