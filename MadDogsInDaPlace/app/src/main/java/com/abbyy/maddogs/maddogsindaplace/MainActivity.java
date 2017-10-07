@@ -711,7 +711,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dataBase = new DataBase(this);
+        DataBase.getInstance(this);
 
         // Retrieve some ui components
         warningTextView = (TextView) findViewById(R.id.warningText);
