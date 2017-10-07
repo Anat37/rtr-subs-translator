@@ -793,11 +793,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActionModeStarted(final ActionMode mode) {
         int start = detectedTextView.getSelectionStart();
-        int end =detectedTextView.getSelectionEnd();
+        int end = detectedTextView.getSelectionEnd();
         final String rawWord = detectedTextView.getText().subSequence(start, end).toString();
         final Word word = new Word(rawWord);
         if (mActionMode == null) {
             mActionMode = mode;
+            mode.setTitle("");
             Menu menu = mode.getMenu();
             // Remove the default menu items (select all, copy, paste, search)
             menu.clear();
@@ -820,13 +821,14 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
             };
-            menu.getItem(0).setOnMenuItemClickListener(listener);
+
+            menu.getItem(1).setOnMenuItemClickListener(listener);
         }
-        mode.setTitle("...");
+        mode.getMenu().getItem(0).setTitle("...");
         word.tryTranslation(new Word.TranslationCallback() {
             @Override
             public void onTranslate(String translation) {
-                mode.setTitle(translation);
+                mode.getMenu().getItem(0).setTitle(translation);
             }
         });
         super.onActionModeStarted(mode);
