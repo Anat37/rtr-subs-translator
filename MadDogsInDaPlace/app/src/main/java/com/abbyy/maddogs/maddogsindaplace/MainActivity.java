@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String BUTTON_TEXT_STOP = "Stop";
     private static final String BUTTON_TEXT_STARTING = "Starting...";
 
+    DataBase dataBase;
+
     // To communicate with the Text Capture Service we will need this callback:
     private ITextCaptureService.Callback textCaptureCallback = new ITextCaptureService.Callback() {
 
@@ -708,6 +710,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        dataBase = new DataBase(this);
+
         // Retrieve some ui components
         warningTextView = (TextView) findViewById(R.id.warningText);
         errorTextView = (TextView) findViewById(R.id.errorText);
@@ -805,6 +809,7 @@ public class MainActivity extends AppCompatActivity {
                     switch(item.getItemId()) {
                         case R.id.cab_add:
                             Toast.makeText(MainActivity.this, detectedTextView.getText(), Toast.LENGTH_LONG);
+                            dataBase.addWord("one", "один");
                             mActionMode.finish();
                             return true;
                     }
@@ -822,6 +827,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActionModeFinished(ActionMode mode) {
         mActionMode = null;
+
+        dataBase.close();
+
         super.onActionModeFinished(mode);
     }
 
