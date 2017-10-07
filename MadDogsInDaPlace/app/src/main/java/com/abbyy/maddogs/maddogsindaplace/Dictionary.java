@@ -3,6 +3,7 @@ package com.abbyy.maddogs.maddogsindaplace;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +22,7 @@ public class Dictionary extends AppCompatActivity {
             add(new Word("Hello"));
             add(new Word("Good buy"));
         }};
-        Button fab = (Button) findViewById(R.id.floatingActionButton);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

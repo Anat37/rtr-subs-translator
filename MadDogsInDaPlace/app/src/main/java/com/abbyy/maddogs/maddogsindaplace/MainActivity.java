@@ -808,7 +808,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("ActionMode", "click");
                     switch(item.getItemId()) {
                         case R.id.cab_add:
-                            Toast.makeText(MainActivity.this, detectedTextView.getText(), Toast.LENGTH_LONG);
                             dataBase.addWord("one", "один");
                             mActionMode.finish();
                             return true;
@@ -827,9 +826,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActionModeFinished(ActionMode mode) {
         mActionMode = null;
-
-        dataBase.close();
-
         super.onActionModeFinished(mode);
     }
 
