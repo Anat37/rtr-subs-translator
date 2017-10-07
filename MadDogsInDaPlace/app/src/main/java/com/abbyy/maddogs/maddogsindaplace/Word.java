@@ -5,22 +5,25 @@ package com.abbyy.maddogs.maddogsindaplace;
  */
 
 public class Word {
+    static private final Integer srcLang = 1033;
+    static private final Integer dstLang = 1049;
+
     private String word;
     private String inRussian;
 
-    private static final Integer NO_IMAGE = -1;
-
-
-    public Word(String _word, String _inRussian) {
+    public Word(String _word) {
         word = _word;
-        inRussian = _inRussian;
+        inRussian = "";
     }
 
     public String getWord() {
         return word;
     }
 
-    public String getInRussian() {
+    public String translateToRussian() {
+        if (!inRussian.equals("")) {
+            return inRussian;
+        }
         return inRussian;
     }
 }
