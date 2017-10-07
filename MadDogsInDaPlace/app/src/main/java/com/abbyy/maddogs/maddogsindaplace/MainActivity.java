@@ -38,6 +38,8 @@ import com.abbyy.mobile.rtr.Language;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.security.auth.callback.Callback;
+
 public class MainActivity extends AppCompatActivity {
 
     // Licensing
@@ -97,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView warningTextView; // Show warnings from recognizer
     private TextView errorTextView; // Show errors from recognizer
     private EditText detectedTextView;
-    ActionMode mActionMode;
+    private Button finishButton;
+    private ActionMode mActionMode;
 
     // Text displayed on start button
     private static final String BUTTON_TEXT_START = "Start";
@@ -608,8 +611,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Initialize recognition language spinner in the UI with available languages
-    private void initializeRecognitionLanguageSpinner()
-    {
+    private void initializeRecognitionLanguageSpinner() {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
         final Spinner languageSpinner = (Spinner) findViewById( R.id.recognitionLanguageSpinner );
 
@@ -679,8 +681,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // The 'Start' and 'Stop' button
-    public void onStartButtonClick( View view )
-    {
+    public void onStartButtonClick( View view ) {
         if( startButton.getText().equals( BUTTON_TEXT_STOP ) ) {
             stopRecognition();
         } else {
@@ -695,6 +696,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void onFinishButtonClick( View view ) {
+    }
+
+
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -706,7 +711,21 @@ public class MainActivity extends AppCompatActivity {
         errorTextView = (TextView) findViewById(R.id.errorText);
         startButton = (Button) findViewById(R.id.startButton);
         detectedTextView = (EditText) findViewById(R.id.detectedText);
+        finishButton = (Button) findViewById(R.id.finishButton);
 
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onStartButtonClick(v);
+            }
+        });
+
+        finishButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onFinishButtonClick(v);
+            }
+        });
         // Initialize the recognition language spinner
         initializeRecognitionLanguageSpinner();
 
@@ -818,5 +837,76 @@ public class MainActivity extends AppCompatActivity {
     public void onActionModeFinished(ActionMode mode) {
         mActionMode = null;
         super.onActionModeFinished(mode);
+    }
+
+    // Initialize recognition language spinner in the UI with available languages
+    private void initializeDestinationLanguageSpinner() {
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences( this );
+        final Spinner languageSpinner = (Spinner) findViewById( R.id.destinationLanguageSpinner );
+
+        // Make the collapsed spinner the size of the selected item
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>( MainActivity.this, R.layout.spinner_item ) {
+            @Override
+            public View getView( int position, View convertView, ViewGroup parent )
+            {
+
+                View view = super.getView( position, convertView, parent );
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT );
+                view.setLayoutParams( params );
+                return view;
+            }
+        };
+
+        // Stored preference
+        final String recognitionLanguageKey = "RecognitionLanguage";
+        String selectedLanguage = preferences.getString( recognitionLanguageKey, "English" );
+
+        // Fill the spinner with available languages selecting the previously chosen language
+        int selectedIndex = -1;
+        for( int i = 0; i < languages.length; i++ ) {
+            String name = languages[i].name();
+            adapter.add( name );
+            if( name.equalsIgnoreCase( selectedLanguage ) ) {
+                selectedIndex = i;
+            }
+        }
+        if( selectedIndex == -1 ) {
+            adapter.insert( selectedLanguage, 0 );
+            selectedIndex = 0;
+        }
+
+        languageSpinner.setAdapter( adapter );
+
+        if( selectedIndex != -1 ) {
+            languageSpinner.setSelection( selectedIndex );
+        }
+
+        // The callback to be called when a language is selected
+        languageSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected( AdapterView<?> parent, View view, int position, long id )
+            {
+                String recognitionLanguage = (String) parent.getItemAtPosition( position );
+                if( textCaptureService != null ) {
+                    // Reconfigure the recognition service each time a new language is selected
+                    // This is also called when the spinner is first shown
+                    textCaptureService.setRecognitionLanguage( Language.valueOf( recognitionLanguage ) );
+                    clearRecognitionResults();
+                }
+                if( !preferences.getString( recognitionLanguageKey, "" ).equalsIgnoreCase( recognitionLanguage ) ) {
+                    // Store the selection in preferences
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString( recognitionLanguageKey, recognitionLanguage );
+                    editor.commit();
+                }
+            }
+
+            @Override
+            public void onNothingSelected( AdapterView<?> parent )
+            {
+            }
+        } );
     }
 }
