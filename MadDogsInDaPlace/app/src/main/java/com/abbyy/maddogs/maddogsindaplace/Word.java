@@ -13,7 +13,7 @@ public class Word {
 
     public Word(String _srcWord) {
         srcWord = _srcWord;
-        WordTranslator.getInstance().getTranslation(srcWord, srcLang, dstLang, new WordTranslator.MyCallback() {
+        WordTranslator.getInstance().getTranslation(srcWord, srcLang, dstLang, new WordTranslator.CallbackLike() {
             @Override
             public void onResponse(String _dstWord) {
                 dstWord = _dstWord;
