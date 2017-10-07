@@ -809,6 +809,7 @@ public class MainActivity extends AppCompatActivity {
                     switch(item.getItemId()) {
                         case R.id.cab_add:
                             Toast.makeText(MainActivity.this, detectedTextView.getText(), Toast.LENGTH_LONG);
+                            dataBase.addWord("one", "один");
                             mActionMode.finish();
                             return true;
                     }
