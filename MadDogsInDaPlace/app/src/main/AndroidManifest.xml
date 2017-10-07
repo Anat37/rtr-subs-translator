@@ -12,6 +12,9 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <!--<uses-permission android:name="android.permission.INTERNET" /> &lt;!&ndash;TODO&ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> &lt;!&ndash;TODO&ndash;&gt;-->
+    <!--<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> &lt;!&ndash;TODO&ndash;&gt;-->
 
     <application
         android:allowBackup="true"
@@ -29,6 +32,7 @@
             <!--</intent-filter>-->
         </activity>
         <activity android:name=".Dictionary">
+            <!-- TODO -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
