@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     surfaceViewWithOverlay.setLines( lines, resultStatus );
                     String text = "";
                     for (ITextCaptureService.TextLine line: lines) {
-                        text += line.Text;
+                        text += line.Text + ' ';
                     }
                     detectedTextView.setText(text);
                 } else {
@@ -792,9 +792,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             menu.getItem(0).setOnMenuItemClickListener(listener);
-            menu.getItem(1).setOnMenuItemClickListener(listener);
         }
-
+        int start = detectedTextView.getSelectionStart();
+        int end =detectedTextView.getSelectionEnd();
+        mode.setTitle(detectedTextView.getText().subSequence(start, end));
         super.onActionModeStarted(mode);
     }
 

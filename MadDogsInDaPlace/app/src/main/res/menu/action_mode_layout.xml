@@ -8,10 +8,4 @@
         android:orderInCategory="1"
         android:title="add"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/cab_share"
-        android:icon="@android:drawable/ic_menu_share"
-        android:orderInCategory="1"
-        app:showAsAction="ifRoom"
-        android:title="share"/>
 </menu>

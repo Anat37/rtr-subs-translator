@@ -40,23 +40,22 @@
         android:layout_height="wrap_content"
         android:text="Start"
         android:id="@+id/startButton"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textSize="15dp"
         android:textColor="#ffffff"
         android:background="#7d010000"
         android:layout_marginBottom="5dp"
-        android:onClick="onStartButtonClick" />
+        android:onClick="onStartButtonClick"
+        android:layout_above="@+id/detectedText"/>
 
     <EditText
         android:id="@+id/detectedText"
+        android:layout_alignParentBottom="true"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/startButton"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:background="#FFFFFFFF"
-        android:inputType="text"
         android:textSize="30sp" />
 </RelativeLayout>
