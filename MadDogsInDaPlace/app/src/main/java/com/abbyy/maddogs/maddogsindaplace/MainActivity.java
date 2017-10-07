@@ -75,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
     };
     ///////////////////////////////////////////////////////////////////////////////
 
+    private Language mDestinationLanguage;
+
     // The 'Abbyy RTR SDK Engine' and 'Text Capture Service' to be used in this sample application
     private Engine engine;
     private ITextCaptureService textCaptureService;
@@ -144,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 // Show the warning from the service if any. The warnings are intended for the user
                 // to take some action (zooming in, checking recognition language, etc.)
                 warningTextView.setText( warning != null ? warning.name() : "" );
-
+                /*
                 if( resultStatus == ITextCaptureService.ResultStabilityStatus.Stable ) {
                     // Stable result has been reached. Stop the service
                     stopRecognition();
@@ -154,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
                     // the same sound that is used for pressing buttons
                     surfaceViewWithOverlay.setFillBackground( true );
                     startButton.playSoundEffect( android.view.SoundEffectConstants.CLICK );
-                }
+                }*/
             }
         }
 
@@ -728,6 +730,7 @@ public class MainActivity extends AppCompatActivity {
         });
         // Initialize the recognition language spinner
         initializeRecognitionLanguageSpinner();
+        initializeDestinationLanguageSpinner();
 
         // Manually create preview surface. The only reason for this is to
         // avoid making it public top level class
@@ -799,8 +802,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onMenuItemClick(MenuItem item) {
                     Log.d("ActionMode", "click");
-                    int start = detectedTextView.getSelectionStart();
-                    int end =detectedTextView.getSelectionEnd();
                     switch(item.getItemId()) {
                         case R.id.cab_add:
                             Toast.makeText(MainActivity.this, detectedTextView.getText(), Toast.LENGTH_LONG);
@@ -816,21 +817,6 @@ public class MainActivity extends AppCompatActivity {
         int end =detectedTextView.getSelectionEnd();
         mode.setTitle(detectedTextView.getText().subSequence(start, end));
         super.onActionModeStarted(mode);
-    }
-
-    public boolean onContextualMenuItemClicked(MenuItem item) {
-        Log.d("ActionMode", "click");
-        int start = detectedTextView.getSelectionStart();
-        int end =detectedTextView.getSelectionEnd();
-
-        switch(item.getItemId()) {
-
-            case R.id.cab_add:
-                Toast.makeText(this, detectedTextView.getText(), Toast.LENGTH_LONG);
-                mActionMode.finish();
-                return true;
-        }
-        return false;
     }
 
     @Override
@@ -860,8 +846,9 @@ public class MainActivity extends AppCompatActivity {
         };
 
         // Stored preference
-        final String recognitionLanguageKey = "RecognitionLanguage";
-        String selectedLanguage = preferences.getString( recognitionLanguageKey, "English" );
+        final String destinationLanguageKey = "DestinationLanguage";
+        String selectedLanguage = preferences.getString( destinationLanguageKey, "Russian" );
+        mDestinationLanguage = Language.valueOf(selectedLanguage);
 
         // Fill the spinner with available languages selecting the previously chosen language
         int selectedIndex = -1;
@@ -888,17 +875,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected( AdapterView<?> parent, View view, int position, long id )
             {
-                String recognitionLanguage = (String) parent.getItemAtPosition( position );
-                if( textCaptureService != null ) {
-                    // Reconfigure the recognition service each time a new language is selected
-                    // This is also called when the spinner is first shown
-                    textCaptureService.setRecognitionLanguage( Language.valueOf( recognitionLanguage ) );
-                    clearRecognitionResults();
-                }
-                if( !preferences.getString( recognitionLanguageKey, "" ).equalsIgnoreCase( recognitionLanguage ) ) {
+                mDestinationLanguage = Language.valueOf((String) parent.getItemAtPosition( position ));
+                if( !preferences.getString( destinationLanguageKey, "" ).equalsIgnoreCase( mDestinationLanguage.toString() ) ) {
                     // Store the selection in preferences
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString( recognitionLanguageKey, recognitionLanguage );
+                    editor.putString( destinationLanguageKey, mDestinationLanguage.toString() );
                     editor.commit();
                 }
             }
