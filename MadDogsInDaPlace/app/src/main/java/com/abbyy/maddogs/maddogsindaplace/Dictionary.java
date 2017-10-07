@@ -23,7 +23,7 @@ public class Dictionary extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
-        ArrayList<Word> words = new DataBase(getApplicationContext()).getWords();
+        ArrayList<Word> words = DataBase.getInstance(getApplicationContext()).getWords();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
