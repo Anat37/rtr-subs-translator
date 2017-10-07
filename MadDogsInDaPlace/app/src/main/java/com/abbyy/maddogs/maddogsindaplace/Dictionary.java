@@ -80,7 +80,7 @@ public class Dictionary extends Activity {
 
     @Override
     protected void onResume() {
-        ArrayList<Word> words = new DataBase(getApplicationContext()).getWords();
+        ArrayList<Word> words = DataBase.getInstance(getApplicationContext()).getWords();
         WordAdapter itemsAdapter = new WordAdapter(this, words);
         ListView listView = (ListView) findViewById(R.id.dictionary);
         listView.setAdapter(itemsAdapter);
