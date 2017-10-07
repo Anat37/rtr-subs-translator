@@ -14,8 +14,8 @@ public class Dictionary extends AppCompatActivity {
         setContentView(R.layout.activity_dictionary);
 
         ArrayList<Word> words = new ArrayList<Word>() {{
-            add(new Word("Hi", "Привет"));
-            add(new Word("Buy", "Пока"));
+            add(new Word("Hello"));
+            add(new Word("Good buy"));
         }};
 
         WordAdapter itemsAdapter = new WordAdapter(this, words);

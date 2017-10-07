@@ -5,22 +5,35 @@ package com.abbyy.maddogs.maddogsindaplace;
  */
 
 public class Word {
-    private String word;
-    private String inRussian;
+    static private final Integer srcLang = 1033;
+    static private final Integer dstLang = 1049;
 
-    private static final Integer NO_IMAGE = -1;
+    private String srcWord;
+    private String dstWord;
 
-
-    public Word(String _word, String _inRussian) {
-        word = _word;
-        inRussian = _inRussian;
+    public Word(String _srcWord) {
+        srcWord = _srcWord;
+        WordTranslator.getInstance().getTranslation(srcWord, srcLang, dstLang, new WordTranslator.CallbackLike() {
+            @Override
+            public void onResponse(String _dstWord) {
+                dstWord = _dstWord;
+            }
+        });
     }
 
-    public String getWord() {
-        return word;
+    public String getSrcWord() {
+        return srcWord;
     }
 
-    public String getInRussian() {
-        return inRussian;
+    public String getDstWord() {
+        return dstWord;
+    }
+
+    public Integer getSrcLang() {
+        return srcLang;
+    }
+
+    public Integer getDstLang() {
+        return dstLang;
     }
 }
