@@ -24,7 +24,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
         <activity android:name=".MainActivity"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" >
         </activity>
         <activity android:name=".WordDescription">
 
