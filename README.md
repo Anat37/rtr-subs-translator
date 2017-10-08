@@ -1,2 +1,2 @@
 # mabbyylity-hackathon
-Прототип для хакатана ABBYY
+Прототип для хакатона ABBYY
