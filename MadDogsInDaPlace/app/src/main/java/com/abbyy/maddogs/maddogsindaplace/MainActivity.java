@@ -12,13 +12,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.text.style.CharacterStyle;
 import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -33,7 +30,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.abbyy.mobile.rtr.Engine;
 import com.abbyy.mobile.rtr.ITextCaptureService;
@@ -41,8 +37,6 @@ import com.abbyy.mobile.rtr.Language;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.security.auth.callback.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,9 +104,9 @@ public class MainActivity extends AppCompatActivity {
     private ActionMode mActionMode;
 
     // Text displayed on start button
-    private static final String BUTTON_TEXT_START = "Start";
-    private static final String BUTTON_TEXT_STOP = "Stop";
-    private static final String BUTTON_TEXT_STARTING = "Starting...";
+    private static final String BUTTON_TEXT_START = "Начать";
+    private static final String BUTTON_TEXT_STOP = "Стоп";
+    private static final String BUTTON_TEXT_STARTING = "Начинаем...";
 
 
     // To communicate with the Text Capture Service we will need this callback:
