@@ -49,31 +49,31 @@
         android:layout_below="@id/language_choose_bar"
         android:layout_centerHorizontal="true"
         android:text=""
-        android:textSize="14sp"
-        android:textColor="#FFFF0000" />
+        android:textColor="#FFFF8000"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/errorText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/warningText"
-        android:layout_marginLeft="15dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
-        android:gravity="left"
         android:text=""
-        android:textColor="#FFFF0000" />
+        android:textColor="#FFFF0000"
+        android:textSize="14sp" />
 
     <Button
         android:id="@+id/startButton"
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/detectedText"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_marginBottom="5dp"
         android:background="#00000000"
         android:onClick="onStartButtonClick"
         android:text="Начать"
-        android:textColor="#ffffff"
+        android:textColor="#FFFFFF"
         android:textSize="15dp" />
 
     <Button
@@ -81,22 +81,24 @@
         android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/detectedText"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginBottom="5dp"
         android:background="#00000000"
         android:onClick="onStartButtonClick"
         android:text="К словарю"
-        android:textColor="#ffffff"
+        android:textColor="#FFFFFF"
         android:textSize="15dp" />
 
     <EditText
         android:id="@+id/detectedText"
         style="@style/Widget.AppCompat.EditText"
         android:layout_width="wrap_content"
-        android:layout_height="60dp"
+        android:layout_height="52dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
+        android:textAlignment="center"
         android:background="#FFFFFFFF"
-        android:textSize="22sp" />
+        android:padding="8dp"
+        android:textSize="15sp" />
 </RelativeLayout>
