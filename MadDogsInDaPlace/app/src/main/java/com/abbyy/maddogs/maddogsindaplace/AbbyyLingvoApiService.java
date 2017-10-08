@@ -17,5 +17,5 @@ public interface AbbyyLingvoApiService {
     Call<String> getToken();
 
     @GET("/api/v1/Minicard")
-    Call<ResponseBody> getMinicard(@Query("text") String text, @Query("srcLang") Integer srcLang, @Query("dstLang") Integer dstLang);
+    Call<Minicard> getMinicard(@Query("text") String text, @Query("srcLang") Integer srcLang, @Query("dstLang") Integer dstLang);
 }
