@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     if( message.contains( "Russian.edc" ) ) {
                         message = "Cyrillic script languages are available in EXTENDED version only. Contact us for more information.";
                     } else if( message.contains( ".trdic" ) ) {
-                        message = "Translation is available in EXTENDED version only. Contact us for more information.";
+                        message = "WordListItem is available in EXTENDED version only. Contact us for more information.";
                     }
                 }
                 errorTextView.setText( message );

@@ -4,50 +4,50 @@ import java.util.List;
 
 public class Minicard {
 
-    private Integer sourceLanguage;
-    private Integer targetLanguage;
-    private String heading;
-    private Translation translation;
-    private List<Object> seeAlso = null;
+    private Integer SourceLanguage;
+    private Integer TargetLanguage;
+    private String Heading;
+    private WordListItem Translation;
+    private List<String> SeeAlso = null;
 
     public Integer getSourceLanguage() {
-        return sourceLanguage;
+        return SourceLanguage;
     }
 
     public void setSourceLanguage(Integer sourceLanguage) {
-        this.sourceLanguage = sourceLanguage;
+        this.SourceLanguage = sourceLanguage;
     }
 
     public Integer getTargetLanguage() {
-        return targetLanguage;
+        return TargetLanguage;
     }
 
     public void setTargetLanguage(Integer targetLanguage) {
-        this.targetLanguage = targetLanguage;
+        this.TargetLanguage = targetLanguage;
     }
 
     public String getHeading() {
-        return heading;
+        return Heading;
     }
 
     public void setHeading(String heading) {
-        this.heading = heading;
+        this.Heading = heading;
     }
 
-    public Translation getTranslation() {
-        return translation;
+    public WordListItem getTranslation() {
+        return Translation;
     }
 
-    public void setTranslation(Translation translation) {
-        this.translation = translation;
+    public void setTranslation(WordListItem Translation) {
+        this.Translation = Translation;
     }
 
-    public List<Object> getSeeAlso() {
-        return seeAlso;
+    public List<String> getSeeAlso() {
+        return SeeAlso;
     }
 
-    public void setSeeAlso(List<Object> seeAlso) {
-        this.seeAlso = seeAlso;
+    public void setSeeAlso(List<String> seeAlso) {
+        this.SeeAlso = seeAlso;
     }
 
 }

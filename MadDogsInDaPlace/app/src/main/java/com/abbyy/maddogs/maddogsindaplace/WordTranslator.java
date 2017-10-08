@@ -8,7 +8,6 @@ import java.util.ArrayDeque;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -110,20 +109,24 @@ public class WordTranslator {
     }
 
     private void invoke(final Invocation i) {
-        minicardService.getMinicard(i.srcWord, i.srcLang, i.dstLang).enqueue(new Callback<ResponseBody>() {
+        minicardService.getMinicard(i.srcWord, i.srcLang, i.dstLang).enqueue(new Callback<Minicard>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Minicard> call, Response<Minicard> response) {
                 try {
                     Log.d("Retrofit", response.raw().toString());
-                    Log.d("Retrofit", response.body().string());
-//                    i.callbackLike.onResponse(response.body().getTranslation().getTranslation());
+                    if (response.body() == null) {
+                        Log.d("Retrofit", "response is null");
+                    }
+                    Minicard card = response.body();
+                    Log.d("Retrofit", response.body().getSourceLanguage().toString());
+                    i.callbackLike.onResponse(response.body().getTranslation().getTranslation());
                 } catch (Exception e) {
                     Log.d("Retrofit", e.getMessage());
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Minicard> call, Throwable t) {
                 Log.d("Retrofit", "failure");
             }
         });
