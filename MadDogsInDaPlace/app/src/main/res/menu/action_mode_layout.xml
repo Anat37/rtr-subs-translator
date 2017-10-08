@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/translation"
-        android:title="add"
+        android:title="${перевод}"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/cab_add"
-        android:title="add"
+        android:title="Добавить"
         app:showAsAction="ifRoom" />
 </menu>

@@ -1,6 +1,5 @@
 package com.abbyy.maddogs.maddogsindaplace;
 
-import java.util.List;
 import java.util.Stack;
 
 /**
@@ -26,7 +25,7 @@ public class Word {
             @Override
             public void onResponse(String _dstWord) {
                 dstWord = _dstWord;
-                while(!queue.empty()) {
+                while(!queue.isEmpty()) {
                     TranslationCallback callback = queue.pop();
                     callback.onTranslate(dstWord);
                 }
