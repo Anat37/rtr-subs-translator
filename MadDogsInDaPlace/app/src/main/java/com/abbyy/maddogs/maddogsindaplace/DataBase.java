@@ -82,6 +82,16 @@ public class DataBase {
         }
     }
 
+    public void delete(Word word) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String[] columns = {sourceWord, translatedWord, sourceLang, destLang};
+        String selection = sourceWord + " = ? and " + translatedWord + " = ? and " + sourceLang +
+                " = ? and " + destLang + " = ?";
+        String[] args = {word.getSrcWord(), word.getDstWord(), word.getSrcLang().toString(),
+                word.getDstLang().toString()};
+        db.delete(tableName, selection, args);
+    }
+
     @Override
     protected void finalize() throws Throwable {
         dbHelper.close();

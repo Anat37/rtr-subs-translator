@@ -1,5 +1,6 @@
 package com.abbyy.maddogs.maddogsindaplace;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.style.CharacterStyle;
 import android.util.Log;
 import android.view.ActionMode;
@@ -18,10 +20,12 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -42,6 +46,7 @@ import javax.security.auth.callback.Callback;
 
 public class MainActivity extends AppCompatActivity {
 
+    private boolean showed = false;
     // Licensing
     private static final String licenseFileName = "lic.LICENSE";
 
@@ -700,10 +705,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFinishButtonClick( View view ) {
-        finish();
+        if (showed) {
+            hideKeyboard();
+        } else {
+            showKeyboard();
+
+        }
     }
-
-
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -736,6 +744,7 @@ public class MainActivity extends AppCompatActivity {
         initializeRecognitionLanguageSpinner();
         initializeDestinationLanguageSpinner();
 
+        detectedTextView.setShowSoftInputOnFocus(false);
         // Manually create preview surface. The only reason for this is to
         // avoid making it public top level class
         RelativeLayout layout = (RelativeLayout) startButton.getParent();
@@ -786,6 +795,7 @@ public class MainActivity extends AppCompatActivity {
         // Clear recognition results
         clearRecognitionResults();
         stopPreviewAndReleaseCamera();
+        hideKeyboard();
         super.onPause();
     }
 
@@ -907,5 +917,23 @@ public class MainActivity extends AppCompatActivity {
             {
             }
         } );
+    }
+
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(this);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        showed = false;
+    }
+
+    public void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        showed = true;
     }
 }

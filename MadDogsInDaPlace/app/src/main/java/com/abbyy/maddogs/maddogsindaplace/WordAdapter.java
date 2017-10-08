@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,14 +21,14 @@ public class WordAdapter extends ArrayAdapter<Word> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View listItemView = convertView;
         if (listItemView == null) {
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.word, parent, false);
         }
 
-        Word currentWord = getItem(position);
+        final Word currentWord = getItem(position);
 
         TextView defaultTextView = (TextView) listItemView.findViewById(R.id.default_text_view);
         defaultTextView.setText(currentWord.getSrcWord());
@@ -35,6 +36,14 @@ public class WordAdapter extends ArrayAdapter<Word> {
         TextView russianTextView = (TextView) listItemView.findViewById(R.id.russian_text_view);
         russianTextView.setText(currentWord.getDstWord());
 
+        Button deleteButton = (Button) listItemView.findViewById(R.id.delete_word);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataBase.getInstance(getContext()).delete(currentWord);
+                WordAdapter.this.remove(currentWord);
+            }
+        });
         return listItemView;
     }
 }
