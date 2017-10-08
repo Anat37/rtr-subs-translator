@@ -6,22 +6,40 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@android:color/holo_red_dark">
+
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Словарь"
+            android:textSize="18pt"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/addWord"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentTop="true"
+            android:background="@android:color/transparent"
+            android:text="+"
+            android:textSize="22pt"
+            android:textColor="@android:color/white"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/dictionary"
         android:layout_width="match_parent"
-        android:layout_height="510dp"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:divider="@null"
-        tools:context="com.abbyy.maddogs.maddogsindaplace.Dictionary">
-
-    </ListView>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:clickable="true"
-        app:fabSize="mini"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        android:orientation="vertical"
+        tools:context="com.abbyy.maddogs.maddogsindaplace.Dictionary"></ListView>
 </LinearLayout>

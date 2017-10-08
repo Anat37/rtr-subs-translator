@@ -17,26 +17,23 @@ import java.util.ArrayList;
 public class Dictionary extends Activity {
     private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
+    WordAdapter itemsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
-
-        ArrayList<Word> words = DataBase.getInstance(getApplicationContext()).getWords();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
-        fab.setOnClickListener(new View.OnClickListener() {
+        Button button = (Button) findViewById(R.id.addWord);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Dictionary.this, MainActivity.class);
                 startActivity(intent);
             }
         });
-        WordAdapter itemsAdapter = new WordAdapter(this, words);
+        itemsAdapter = new WordAdapter(this, new ArrayList<Word>(0));
         ListView listView = (ListView) findViewById(R.id.dictionary);
         listView.setAdapter(itemsAdapter);
-
         gestureDetector = new GestureDetector(new SwipeGestureDetector());
         gestureListener = new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -81,9 +78,8 @@ public class Dictionary extends Activity {
     @Override
     protected void onResume() {
         ArrayList<Word> words = DataBase.getInstance(getApplicationContext()).getWords();
-        WordAdapter itemsAdapter = new WordAdapter(this, words);
-        ListView listView = (ListView) findViewById(R.id.dictionary);
-        listView.setAdapter(itemsAdapter);
+        itemsAdapter.clear();
+        itemsAdapter.addAll(words);
         super.onResume();
     }
 }
