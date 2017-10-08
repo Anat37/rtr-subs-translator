@@ -1,5 +1,6 @@
 package com.abbyy.maddogs.maddogsindaplace;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -16,5 +17,5 @@ public interface AbbyyLingvoApiService {
     Call<String> getToken();
 
     @GET("/api/v1/Minicard")
-    Call<Minicard> getMinicard(@Query("text") String text, @Query("srcLang") Integer srcLang, @Query("dstLang") Integer dstLang);
+    Call<ResponseBody> getMinicard(@Query("text") String text, @Query("srcLang") Integer srcLang, @Query("dstLang") Integer dstLang);
 }

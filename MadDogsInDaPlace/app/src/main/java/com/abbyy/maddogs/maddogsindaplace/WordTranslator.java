@@ -8,6 +8,7 @@ import java.util.ArrayDeque;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +39,6 @@ public class WordTranslator {
         Retrofit retrofitToken = new Retrofit.Builder()
                 .baseUrl("https://developers.lingvolive.com")
                 .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
                 .build();
         tokenService = retrofitToken.create(AbbyyLingvoApiService.class);
         
@@ -74,6 +74,7 @@ public class WordTranslator {
     }
 
     public void getToken(final CallbackLike callbackLike) {
+        Log.d("Retrofit", "getting token");
         tokenService.getToken().enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -82,18 +83,19 @@ public class WordTranslator {
                     callbackLike.onResponse(response.body());
                     Log.wtf("onResonse-NError-Token", "Ok?2");
                     Log.wtf("onResonse-NError-Token", response.body());
+                    Log.d("Retrofit", response.body().toString());
                     while (!queue.isEmpty()) {
                         Invocation i = queue.removeFirst();
                         invoke(i);
                     }
                 } catch (Exception e) {
-                    Log.wtf("onResonse-Error-Token", e.getMessage());
+                    Log.d("Retrofit", e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.wtf("onFailure-Error-Token", t.getMessage());
+                Log.d("Retrofit", t.getMessage());
             }
         });
     }
@@ -108,23 +110,21 @@ public class WordTranslator {
     }
 
     private void invoke(final Invocation i) {
-        minicardService.getMinicard(i.srcWord, i.srcLang, i.dstLang).enqueue(new Callback<Minicard>() {
+        minicardService.getMinicard(i.srcWord, i.srcLang, i.dstLang).enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<Minicard> call, Response<Minicard> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    Log.wtf("-Error- response.body", "!!!" + response.body() + "!!!");
-                    Log.wtf("-Error- response.", "!!!" + response + "!!!");
-                    Log.wtf("-Error- response.raw", "!!!" + response.raw() + "!!!");
-                    Log.wtf("-Error- response.tosrt", "!!!" + response.toString() + "!!!");
+                    Log.d("Retrofit", response.raw().toString());
+                    Log.d("Retrofit", response.body().string());
 //                    i.callbackLike.onResponse(response.body().getTranslation().getTranslation());
                 } catch (Exception e) {
-                    Log.wtf("onResponse-Error-Invoke", e.getMessage());
+                    Log.d("Retrofit", e.getMessage());
                 }
             }
 
             @Override
-            public void onFailure(Call<Minicard> call, Throwable t) {
-                Log.wtf("onFailure-Error-Invoke", t.getMessage());
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("Retrofit", "failure");
             }
         });
     }
