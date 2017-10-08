@@ -7,7 +7,7 @@
     <TextView
         android:id="@+id/default_text_view"
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/word_height"
         android:gravity="start|center"
         android:padding="@dimen/word_padding"
         android:text="Слово"
@@ -19,7 +19,7 @@
     <TextView
         android:id="@+id/russian_text_view"
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/word_height"
         android:gravity="start|center"
         android:padding="@dimen/word_padding"
         android:textSize="18sp"
@@ -41,14 +41,14 @@
     <TextView
         android:id="@+id/recLang"
         android:layout_width="30dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/word_height"
         android:text="ENG"
         android:layout_alignParentTop="true"
         android:layout_toStartOf="@+id/delete_word" />
     <TextView
         android:id="@+id/destLang"
         android:layout_width="30dp"
-        android:layout_height="40dp"
+        android:layout_height="@dimen/word_height"
         android:text="RUS"
         android:layout_below="@+id/delete_word"
         android:layout_alignStart="@+id/recLang" />

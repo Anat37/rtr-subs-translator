@@ -70,7 +70,8 @@ public class DataBase {
         String[] columns = {sourceWord, translatedWord, sourceLang, destLang};
         String selection = sourceWord + " = ? and " + translatedWord + " = ? and " + sourceLang +
                 " = ? and " + destLang + " = ?";
-        String[] args = {word.getSrcWord(), word.getDstWord(), word.getSrcLang().toString(),
+        String[] args = {word.getSrcWord(), word.getDstWord() == null ? "NULL" : word.getDstWord(),
+                word.getSrcLang().toString(),
                 word.getDstLang().toString()};
         Cursor cursor = db.query(tableName, columns, selection, args, null, null, null);
         if (cursor.getCount() == 1) {
@@ -84,11 +85,8 @@ public class DataBase {
 
     public void delete(Word word) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        String[] columns = {sourceWord, translatedWord, sourceLang, destLang};
-        String selection = sourceWord + " = ? and " + translatedWord + " = ? and " + sourceLang +
-                " = ? and " + destLang + " = ?";
-        String[] args = {word.getSrcWord(), word.getDstWord(), word.getSrcLang().toString(),
-                word.getDstLang().toString()};
+        String selection = sourceWord + " = ?";
+        String[] args = {word.getSrcWord()};
         db.delete(tableName, selection, args);
     }
 

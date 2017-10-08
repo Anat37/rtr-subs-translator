@@ -22,9 +22,13 @@ public class WordDescription extends AppCompatActivity {
         Intent intent = getIntent();
         Word word = new Word(intent.getBundleExtra("word"));
 
-        tvView = (TextView) findViewById(R.id.textView);
-        tvView.setText(word.getSrcWord() + " " + word.getSrcLang().toString() + " " +
-                word.getDstWord() + " " + word.getDstLang().toString());
+        tvView = (TextView) findViewById(R.id.srcWord);
+        tvView.setText(word.getSrcWord());
+        tvView = (TextView) findViewById(R.id.languages);
+        //tvView.setText(word.getSrcLang().toString() + " - " + word.getDstLang().toString());
+        tvView.setText("ENG - RUS");
+        tvView = (TextView) findViewById(R.id.translation);
+        tvView.setText(word.getDstWord());
 
         Button button = (Button) findViewById(R.id.backArrow);
         button.setOnClickListener(new View.OnClickListener() {

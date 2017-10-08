@@ -699,13 +699,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onFinishButtonClick( View view ) {
+        finish();
+    }
+
+    public void onKeyboardButtonClick( View view ) {
         if (showed) {
             hideKeyboard();
         } else {
             showKeyboard();
-
         }
     }
+
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
@@ -739,6 +743,13 @@ public class MainActivity extends AppCompatActivity {
         initializeDestinationLanguageSpinner();
 
         detectedTextView.setShowSoftInputOnFocus(false);
+        Button keyboardButton = (Button) findViewById(R.id.keyboardButton);
+        keyboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onKeyboardButtonClick(v);
+            }
+        });
         // Manually create preview surface. The only reason for this is to
         // avoid making it public top level class
         RelativeLayout layout = (RelativeLayout) startButton.getParent();
@@ -793,8 +804,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+
+
     @Override
     public void onActionModeStarted(final ActionMode mode) {
+        Log.d("ActionMode", "start");
         int start = detectedTextView.getSelectionStart();
         int end = detectedTextView.getSelectionEnd();
         final String rawWord = detectedTextView.getText().subSequence(start, end).toString();
@@ -808,7 +822,6 @@ public class MainActivity extends AppCompatActivity {
             // If you want to keep any of the defaults,
             // remove the items you don't want individually:
             // menu.removeItem(android.R.id.[id_of_item_to_remove])
-
             // Inflate your own menu items
             mode.getMenuInflater().inflate(R.menu.action_mode_layout, menu);
             MenuItem.OnMenuItemClickListener listener = new MenuItem.OnMenuItemClickListener() {
@@ -835,6 +848,9 @@ public class MainActivity extends AppCompatActivity {
         word.tryTranslation(new Word.TranslationCallback() {
             @Override
             public void onTranslate(String translation) {
+                if(translation.length() > 19) {
+                    translation = translation.substring(0, 17);
+                }
                 mode.getMenu().getItem(0).setTitle(translation);
             }
         });

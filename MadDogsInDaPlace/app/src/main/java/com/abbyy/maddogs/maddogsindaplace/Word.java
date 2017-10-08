@@ -3,6 +3,7 @@ package com.abbyy.maddogs.maddogsindaplace;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Stack;
 
@@ -54,6 +55,7 @@ public class Word {
                 dstWord = _dstWord;
                 while(!queue.isEmpty()) {
                     TranslationCallback callback = queue.pop();
+                    Log.d("Loop", "working");
                     callback.onTranslate(dstWord);
                 }
             }

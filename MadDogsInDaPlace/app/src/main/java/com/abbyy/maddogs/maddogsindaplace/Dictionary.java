@@ -19,6 +19,7 @@ public class Dictionary extends Activity {
     private GestureDetector gestureDetector;
     View.OnTouchListener gestureListener;
     WordAdapter itemsAdapter;
+    ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,18 +40,10 @@ public class Dictionary extends Activity {
             }
         });
         itemsAdapter = new WordAdapter(this, new ArrayList<Word>(0));
-        ListView listView = (ListView) findViewById(R.id.dictionary);
+        listView = (ListView) findViewById(R.id.dictionary);
         listView.setAdapter(itemsAdapter);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(Dictionary.this, WordDescription.class);
-                Word word = (Word) adapterView.getAdapter().getItem(i);
-                intent.putExtra("word", word.getBundle());
-                startActivity(intent);
-            }
-        });
+
 
 
         gestureDetector = new GestureDetector(new SwipeGestureDetector());
