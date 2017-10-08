@@ -68,8 +68,8 @@ public class DataBase {
     public Boolean isIn(Word word) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String[] columns = {sourceWord, translatedWord, sourceLang, destLang};
-        String selection = sourceWord + " = ?, " + translatedWord + " = ?, " + sourceLang +
-                " = ?, " + destLang + " = ?";
+        String selection = sourceWord + " = ? and " + translatedWord + " = ? and " + sourceLang +
+                " = ? and " + destLang + " = ?";
         String[] args = {word.getSrcWord(), word.getDstWord(), word.getSrcLang().toString(),
                 word.getDstLang().toString()};
         Cursor cursor = db.query(tableName, columns, selection, args, null, null, null);
