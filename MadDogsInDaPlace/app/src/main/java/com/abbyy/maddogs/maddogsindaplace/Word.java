@@ -1,5 +1,9 @@
 package com.abbyy.maddogs.maddogsindaplace;
 
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Stack;
 
 /**
@@ -14,8 +18,31 @@ public class Word {
     private String dstWord;
     private Stack<TranslationCallback> queue;
 
+    public Bundle getBundle() {
+        Bundle bundle = new Bundle();
+        bundle.putCharArray("sourceWord", srcWord.toCharArray());
+        if (dstWord != null) {
+            bundle.putCharArray("translatedWord", dstWord.toCharArray());
+        }
+        bundle.putInt("sourceLang", srcLang);
+        bundle.putInt("destLang", dstLang);
+        return bundle;
+    }
+
     public interface TranslationCallback {
         public void onTranslate(String translation);
+    }
+
+    public Word(Bundle bundle) {
+        srcWord = new String(bundle.getCharArray("sourceWord"));
+        char[] trans = bundle.getCharArray("translatedWord");
+        if (trans != null) {
+            dstWord =  new String(trans);
+        } else {
+            dstWord = null;
+        }
+        srcLang = bundle.getInt("sourceLang");
+        dstLang = bundle.getInt("destLang");
     }
 
     public Word(String _srcWord) {

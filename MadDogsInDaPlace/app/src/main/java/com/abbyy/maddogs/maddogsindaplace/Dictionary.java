@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -22,7 +23,7 @@ public class Dictionary extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
-
+        DataBase.getInstance(getApplicationContext()).addWord(new Word("azaz", "лел", 14, 88));
         ArrayList<Word> words = DataBase.getInstance(getApplicationContext()).getWords();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.floatingActionButton);
@@ -36,6 +37,15 @@ public class Dictionary extends Activity {
         WordAdapter itemsAdapter = new WordAdapter(this, words);
         ListView listView = (ListView) findViewById(R.id.dictionary);
         listView.setAdapter(itemsAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(Dictionary.this, WordDescription.class);
+                Word word = (Word) adapterView.getAdapter().getItem(i);
+                intent.putExtra("word", word.getBundle());
+                startActivity(intent);
+            }
+        });
 
         gestureDetector = new GestureDetector(new SwipeGestureDetector());
         gestureListener = new View.OnTouchListener() {
