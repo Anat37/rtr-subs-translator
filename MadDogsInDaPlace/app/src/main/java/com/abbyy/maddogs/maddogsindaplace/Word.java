@@ -1,8 +1,6 @@
 package com.abbyy.maddogs.maddogsindaplace;
 
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import java.util.Stack;
 
@@ -46,7 +44,7 @@ public class Word {
     }
 
     public Word(String _srcWord) {
-        srcWord = _srcWord;
+        srcWord = _srcWord.toLowerCase();
         queue = new Stack<>();
         WordTranslator.getInstance().getTranslation(srcWord, srcLang, dstLang, new WordTranslator.CallbackLike() {
             @Override
