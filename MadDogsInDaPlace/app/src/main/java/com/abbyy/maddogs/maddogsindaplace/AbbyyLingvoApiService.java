@@ -1,8 +1,9 @@
 package com.abbyy.maddogs.maddogsindaplace;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -11,9 +12,10 @@ import retrofit2.http.Query;
  */
 
 public interface AbbyyLingvoApiService {
+    @Headers("Authorization: Basic ZWNkNjc3NTItNDhiNS00ZDM1LTlkMjAtZDVjYWMwMWNkMTg3OjMzMDQ2MzY4M2NlNzRjNTI4MzFiYjFlZmU0YzA3ZmQy")
     @POST("/api/v1.1/authenticate")
     Call<String> getToken();
 
     @GET("/api/v1/Minicard")
-    Call<Minicard> getMinicard(@Header("Authorization: Bearer {token}") String token, @Query("text") String text, @Query("srcLang") Integer srcLang, @Query("dstLang") Integer dstLang);
+    Call<ResponseBody> getMinicard(@Query("text") String text, @Query("srcLang") Integer srcLang, @Query("dstLang") Integer dstLang);
 }

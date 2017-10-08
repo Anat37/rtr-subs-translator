@@ -26,6 +26,10 @@
         <activity android:name=".MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
+        <activity android:name=".WordDescription">
+
+        </activity>
+
         <activity android:name=".Dictionary">
             <!-- TODO -->
             <intent-filter>
