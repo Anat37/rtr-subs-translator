@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/language_choose_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp">
+
+        <Spinner
+            android:id="@+id/recognitionLanguageSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="#00000000"
+            android:gravity="start|center_vertical"
+            android:popupBackground="#BB000000"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/imageArrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="→"
+            android:textColor="#ffffff"
+            android:textSize="15sp" />
+
+        <Spinner
+            android:id="@+id/destinationLanguageSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="#00000000"
+            android:gravity="end|center_vertical"
+            android:popupBackground="#BB000000"
+            android:textSize="15dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/warningText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/language_choose_bar"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:textColor="#FFFF8000"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/warningText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text=""
+        android:textColor="#FFFF0000"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/detectedText"
+        android:layout_alignParentStart="true"
+        android:layout_margin="5dp"
+        android:background="#00000000"
+        android:onClick="onStartButtonClick"
+        android:text="Начать"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp" />
+
+    <Button
+        android:id="@+id/finishButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/detectedText"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
+        android:background="#00000000"
+        android:onClick="onStartButtonClick"
+        android:text="К словарю"
+        android:textColor="#FFFFFF"
+        android:textSize="15dp" />
+
+    <EditText
+        android:id="@+id/detectedText"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:textAlignment="center"
+        android:background="#FFFFFFFF"
+        android:padding="8dp"
+        android:textSize="15sp" />
+
+    <Button
+        android:layout_above="@+id/detectedText"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/keyboardButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="5dp"
+        android:background="@mipmap/keyboard"/>
+</RelativeLayout>
